@@ -1,0 +1,41 @@
+/BATCH
+/POST1
+
+! Numero do nó para monitorar
+*SET, NOMON, 5618
+
+! Abre arquivo para escrita 
+*CFOPEN, deslocamentos, CSV
+
+! Grava um cabeçalho 
+*VWRITE, 'Passo', 'tempo', 'UX', 'UY', 'UZ'
+(A,A,A,A,A)
+
+! Pega o número de passos de carga do arquivo 
+*GET, NPASSOS, ACTIVE, 0, SET, NSET
+
+! Vai para o primeiro passo 
+SET,FIRST
+
+! Loop pelos sets
+*DO,i,1, NPASSOS
+
+    ! Pega o tempo atual 
+    *GET, tempo, ACTIVE, 0, SET, TIME
+
+    ! Pega os deslocamentos no nó 
+    *GET, ux, NODE, NOMON, U, X
+    *GET, uy, NODE, NOMON, U, Y
+    *GET, uz, NODE, NOMON, U, Z
+
+    ! Grava no arquivo 
+    *VWRITE, i, tempo, ux, uy, uz
+    (5(E16.8))
+
+    ! Muda o passo 
+    SET,NEXT
+
+*ENDDO
+
+*CFCLOS
+FINISH
